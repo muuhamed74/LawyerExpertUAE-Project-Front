@@ -19,8 +19,8 @@ import { ContractServiceService } from '../../shared/Services/contract-service.s
   styleUrls: ['./templates.component.css']
 })
 export class TemplatesComponent {
-  allContracts: ContractItem[] = [];
-  activeContract!: ContractItem;
+allContracts: ContractItem[] = [];
+  activeContract: ContractItem | null = null;  // بدل !، عشان يبدأ null
   searchQuery: string = '';
   hoveredContract: ContractItem | null = null;
 
@@ -34,7 +34,6 @@ export class TemplatesComponent {
     this.loadContracts();
   }
 
-  // **تحميل العقود من السيرفر**
   loadContracts(): void {
     this.contractService.getContracts().subscribe({
       next: (res: ContractItem[]) => {
@@ -44,10 +43,8 @@ export class TemplatesComponent {
           this.activeContract = this.allContracts[0];
         }
 
-        // ✅ فحص صلاحية الروابط
-        // ✅ فحص صلاحية الروابط مع ترميز URL
         this.allContracts.forEach(contract => {
-          const encodedUrl = encodeURI(contract.fileUrl); // ترميز الرابط بالكامل
+          const encodedUrl = encodeURI(contract.fileUrl);
           console.log('رابط العقد:', encodedUrl);
 
           fetch(encodedUrl)
@@ -62,7 +59,6 @@ export class TemplatesComponent {
     });
   }
 
-  // **فلترة العقود حسب نص البحث**
   get filteredContracts(): ContractItem[] {
     const query = this.searchQuery.trim();
     if (!query) return this.allContracts;
@@ -71,25 +67,21 @@ export class TemplatesComponent {
     );
   }
 
-  // **اختيار عقد**
   selectContract(contract: ContractItem): void {
     this.activeContract = contract;
     this.toggleImages(contract.title);
   }
 
-  // **تأثير Hover**
   onMouseEnter(contract: ContractItem): void {
     this.hoveredContract = contract;
     this.toggleImages(contract.title);
   }
 
-  // عند مغادرة الماوس
   onMouseLeave(): void {
     this.hoveredContract = null;
     if (this.activeContract) this.toggleImages(this.activeContract.title);
   }
 
-  // **تبديل الصور**
   toggleImages(contractTitle: string): void {
     const id = this.contractToId(contractTitle);
     this.resumeImages.forEach((imgRef) => {
@@ -101,12 +93,10 @@ export class TemplatesComponent {
     });
   }
 
-  // **تحويل العنوان إلى ID**
   contractToId(contractTitle: string): string {
     return contractTitle.trim().replace(/\s+/g, '-');
   }
 
-  // **استخدام العقد**
   onUseContract(): void {
     const token = localStorage.getItem('userToken');
 
