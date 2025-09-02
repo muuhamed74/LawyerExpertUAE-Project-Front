@@ -9,7 +9,11 @@ import { ToastrService } from 'ngx-toastr';
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './verify.component.html',
+<<<<<<< HEAD
   styleUrl: './verify.component.css'
+=======
+  styleUrls: ['./verify.component.css']
+>>>>>>> upstream/master
 })
 export class VerifyComponent {
   verifyForm: FormGroup = new FormGroup({
@@ -30,7 +34,11 @@ export class VerifyComponent {
     private _AuthService: AuthService,
     private _Router: Router,
     private route: ActivatedRoute,
+<<<<<<< HEAD
      private toastr: ToastrService
+=======
+    private toastr: ToastrService
+>>>>>>> upstream/master
   ) {
     this.route.queryParams.subscribe(params => {
       this.email = params['email'];
@@ -53,7 +61,10 @@ export class VerifyComponent {
 
     this.isLoading = true;
 
+<<<<<<< HEAD
     // الباك إند مستني email و code small زي Postman
+=======
+>>>>>>> upstream/master
     const payload = {
       email: this.email.trim(),
       code: this.verifyForm.value.code.trim()
@@ -62,14 +73,22 @@ export class VerifyComponent {
     console.log("Verify payload:", payload);
 
     this._AuthService.verifyCode(payload).subscribe({
+<<<<<<< HEAD
       next: (response) => {
+=======
+      next: () => {
+>>>>>>> upstream/master
         this.isLoading = false;
         this.toastr.success('تم تأكيد الحساب بنجاح ✅');
         setTimeout(() => {
           this._Router.navigate(['/login']);
         }, 1500);
       },
+<<<<<<< HEAD
       error: (err) => {
+=======
+      error: () => {
+>>>>>>> upstream/master
         this.isLoading = false;
         this.toastr.error('فشل التحقق، حاول مرة أخرى.');
       }
@@ -87,6 +106,7 @@ export class VerifyComponent {
 
     this.resendLoading = true;
 
+<<<<<<< HEAD
     // هنا كمان نخليها email small
     this._AuthService.resendCode({ email: this.email.trim() }).subscribe({
       next: (response) => {
@@ -94,6 +114,14 @@ export class VerifyComponent {
         this.toastr.success('تم إرسال الكود مرة أخرى ✅');
       },
       error: (err) => {
+=======
+    this._AuthService.resendCode({ email: this.email.trim() }).subscribe({
+      next: () => {
+        this.resendLoading = false;
+        this.toastr.success('تم إرسال الكود مرة أخرى ✅');
+      },
+      error: () => {
+>>>>>>> upstream/master
         this.resendLoading = false;
         this.toastr.error('فشل إرسال الكود، حاول مرة أخرى.');
       }

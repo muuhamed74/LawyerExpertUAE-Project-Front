@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 import { Component, OnInit } from '@angular/core';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { CommonModule } from '@angular/common';
+=======
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { AngularEditorConfig } from '@kolkov/angular-editor';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+>>>>>>> upstream/master
 import { FormsModule } from '@angular/forms';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { ActivatedRoute } from '@angular/router';
@@ -19,6 +25,10 @@ export class ContractEditorComponent implements OnInit {
   htmlContent: string = '';
   activeTitle: string = '';
   activeContract!: ContractItem | null;
+<<<<<<< HEAD
+=======
+  isBrowser: boolean;
+>>>>>>> upstream/master
 
   editorConfig: AngularEditorConfig = {
     editable: true,
@@ -41,10 +51,22 @@ export class ContractEditorComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+<<<<<<< HEAD
     private contractService: ContractServiceService
   ) {}
 
   ngOnInit(): void {
+=======
+    private contractService: ContractServiceService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
+
+  ngOnInit(): void {
+    if (!this.isBrowser) return; // ما ننفذش على السيرفر
+
+>>>>>>> upstream/master
     this.route.queryParams.subscribe(params => {
       const title = params['title'];
       if (title) {
@@ -53,8 +75,14 @@ export class ContractEditorComponent implements OnInit {
     });
   }
 
+<<<<<<< HEAD
   // تحميل محتوى العقد بناءً على العنوان
   loadContractByTitle(title: string): void {
+=======
+  loadContractByTitle(title: string): void {
+    if (!this.isBrowser) return;
+
+>>>>>>> upstream/master
     this.contractService.getContracts().subscribe({
       next: (contracts: ContractItem[]) => {
         const contract = contracts.find(c => c.title === title);
@@ -80,8 +108,14 @@ export class ContractEditorComponent implements OnInit {
     });
   }
 
+<<<<<<< HEAD
   // تحميل نسخة PDF
   downloadPdf() {
+=======
+  downloadPdf() {
+    if (!this.isBrowser) return;
+
+>>>>>>> upstream/master
     import('html2canvas').then(html2canvas => {
       import('jspdf').then(jsPDF => {
         const tempDiv = document.createElement('div');

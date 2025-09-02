@@ -13,6 +13,7 @@ import { ContractItem } from '../interfaces/contracts-list-response';
 })
 export class ContractServiceService {
 
+<<<<<<< HEAD
   constructor(private http: HttpClient) { }
 
   // بعد التعديل
@@ -36,5 +37,30 @@ export class ContractServiceService {
   getUserContracts(): Observable<UserContractsResponse[]> {
     // التوكن بيتضاف تلقائيًا من الـ interceptor (لو مفعل)
     return this.http.get<UserContractsResponse[]>(`${Environment.baseUrl}/api/Contracts/user-contracts`);
+=======
+  private apiUrl = Environment.baseUrl || '';
+
+  constructor(private http: HttpClient) { }
+
+  getContracts(): Observable<ContractItem[]> {
+    return this.http.get<ContractItem[]>(`${this.apiUrl}/api/Contracts`);
+  }
+
+  getContractProduct(id: number | string): Observable<ContractProductResponse> {
+    return this.http.get<ContractProductResponse>(`${this.apiUrl}/api/Contracts/product/${id}`);
+  }
+
+  uploadTemplate(file: File): Observable<UploadTemplateResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<UploadTemplateResponse>(`${this.apiUrl}/api/Contracts/fill-template`, formData);
+  }
+
+  getUserContracts(): Observable<UserContractsResponse[]> {
+    const token = localStorage.getItem('userToken') || '';
+    return this.http.get<UserContractsResponse[]>(`${this.apiUrl}/api/Contracts/user-contracts`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+>>>>>>> upstream/master
   }
 }
