@@ -39,6 +39,7 @@ export class TemplatesComponent {
     this.loadContracts();
   }
 
+  // تحميل العقود والتأكد من الروابط
   loadContracts(): void {
     this.contractService.getContracts().subscribe({
       next: (res: ContractItem[]) => {
@@ -48,10 +49,16 @@ export class TemplatesComponent {
           this.activeContract = this.allContracts[0];
         }
 
-        // فقط على المتصفح
+        // التحقق من الروابط فقط على المتصفح
         if (this.isBrowser) {
           this.allContracts.forEach(contract => {
-            const encodedUrl = encodeURI(contract.fileUrl);
+            // تحويل الرابط لـ https لو هو http
+            let url = contract.fileUrl;
+            if (url.startsWith('http://')) {
+              url = url.replace('http://', 'https://');
+            }
+
+            const encodedUrl = encodeURI(url);
             fetch(encodedUrl)
               .then(resp => {
                 if (!resp.ok) throw new Error('الرابط غير متاح!');
@@ -65,6 +72,7 @@ export class TemplatesComponent {
     });
   }
 
+  // الفلترة حسب البحث
   get filteredContracts(): ContractItem[] {
     const query = this.searchQuery.trim().toLowerCase();
     if (!query) return this.allContracts;
@@ -73,23 +81,27 @@ export class TemplatesComponent {
     );
   }
 
+  // اختيار العقد النشط
   selectContract(contract: ContractItem): void {
     this.activeContract = contract;
     this.toggleImages(contract.title);
   }
 
+  // عند مرور الماوس على العقد
   onMouseEnter(contract: ContractItem): void {
     this.hoveredContract = contract;
     this.toggleImages(contract.title);
   }
 
+  // عند مغادرة الماوس
   onMouseLeave(): void {
     this.hoveredContract = null;
     if (this.activeContract) this.toggleImages(this.activeContract.title);
   }
 
+  // إظهار صورة العقد النشط أو الحالي
   toggleImages(contractTitle: string): void {
-    if (!this.isBrowser) return; // حماية من SSR
+    if (!this.isBrowser) return;
 
     const id = this.contractToId(contractTitle);
     this.resumeImages.forEach((imgRef) => {
@@ -101,10 +113,12 @@ export class TemplatesComponent {
     });
   }
 
+  // تحويل اسم العقد إلى ID صالح
   contractToId(contractTitle: string): string {
     return contractTitle.trim().replace(/\s+/g, '-');
   }
 
+  // استخدام العقد النشط
   onUseContract(): void {
     const token = localStorage.getItem('userToken');
 
