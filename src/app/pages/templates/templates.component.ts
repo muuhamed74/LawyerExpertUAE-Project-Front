@@ -3,9 +3,11 @@ import {
   ElementRef,
   ViewChildren,
   QueryList,
-  Renderer2
+  Renderer2,
+  Inject,
+  PLATFORM_ID
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ContractItem } from '../../shared/interfaces/contracts-list-response';
@@ -19,18 +21,21 @@ import { ContractServiceService } from '../../shared/Services/contract-service.s
   styleUrls: ['./templates.component.css']
 })
 export class TemplatesComponent {
-allContracts: ContractItem[] = [];
-  activeContract: ContractItem | null = null;  // بدل !، عشان يبدأ null
+  allContracts: ContractItem[] = [];
+  activeContract: ContractItem | null = null;
   searchQuery: string = '';
   hoveredContract: ContractItem | null = null;
+  isBrowser: boolean;
 
   @ViewChildren('resumeImg') resumeImages!: QueryList<ElementRef>;
 
   constructor(
     private router: Router,
     private renderer: Renderer2,
-    private contractService: ContractServiceService
+    private contractService: ContractServiceService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
+    this.isBrowser = isPlatformBrowser(platformId);
     this.loadContracts();
   }
 
@@ -43,27 +48,28 @@ allContracts: ContractItem[] = [];
           this.activeContract = this.allContracts[0];
         }
 
-        this.allContracts.forEach(contract => {
-          const encodedUrl = encodeURI(contract.fileUrl);
-          console.log('رابط العقد:', encodedUrl);
-
-          fetch(encodedUrl)
-            .then(resp => {
-              if (!resp.ok) throw new Error('الرابط غير متاح!');
-              console.log('العقد موجود ويمكن تحميله:', contract.title);
-            })
-            .catch(err => console.error('مشكلة في الرابط:', contract.title, err));
-        });
+        // فقط على المتصفح
+        if (this.isBrowser) {
+          this.allContracts.forEach(contract => {
+            const encodedUrl = encodeURI(contract.fileUrl);
+            fetch(encodedUrl)
+              .then(resp => {
+                if (!resp.ok) throw new Error('الرابط غير متاح!');
+                console.log('العقد موجود ويمكن تحميله:', contract.title);
+              })
+              .catch(err => console.error('مشكلة في الرابط:', contract.title, err));
+          });
+        }
       },
       error: (err) => console.error('Error fetching contracts:', err)
     });
   }
 
   get filteredContracts(): ContractItem[] {
-    const query = this.searchQuery.trim();
+    const query = this.searchQuery.trim().toLowerCase();
     if (!query) return this.allContracts;
     return this.allContracts.filter(contract =>
-      contract.title.includes(query)
+      contract.title.toLowerCase().includes(query)
     );
   }
 
@@ -83,6 +89,8 @@ allContracts: ContractItem[] = [];
   }
 
   toggleImages(contractTitle: string): void {
+    if (!this.isBrowser) return; // حماية من SSR
+
     const id = this.contractToId(contractTitle);
     this.resumeImages.forEach((imgRef) => {
       const img = imgRef.nativeElement as HTMLElement;

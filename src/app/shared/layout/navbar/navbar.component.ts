@@ -19,8 +19,8 @@ export class NavbarComponent implements OnDestroy {
 
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly userSub: Subscription;
-  private readonly routerSub: Subscription;
+  private userSub!: Subscription;
+  private routerSub!: Subscription;
 
   constructor() {
     // متابعة حالة تسجيل الدخول
@@ -45,12 +45,14 @@ export class NavbarComponent implements OnDestroy {
   /** يراقب وضع التمرير */
   @HostListener('window:scroll')
   onWindowScroll(): void {
-    this.navbarScrolled = window.pageYOffset > 60;
+    if (typeof window !== 'undefined') {
+      this.navbarScrolled = window.pageYOffset > 60;
+    }
   }
 
   /** تنظيف الاشتراكات */
   ngOnDestroy(): void {
-    this.userSub.unsubscribe();
-    this.routerSub.unsubscribe();
+    this.userSub?.unsubscribe();
+    this.routerSub?.unsubscribe();
   }
 }

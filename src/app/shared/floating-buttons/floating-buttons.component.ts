@@ -1,16 +1,17 @@
-import { NgFor, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-floating-buttons',
   standalone: true,
-  imports: [NgIf],
+  imports: [NgIf, RouterLink],
   templateUrl: './floating-buttons.component.html',
-  styleUrl: './floating-buttons.component.css'
+  styleUrls: ['./floating-buttons.component.css'] // صححت هنا
 })
 export class FloatingButtonsComponent {
   showButton = false;
+
   @HostListener('window:scroll', [])
   onWindowScroll() {
     const scrollY = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;

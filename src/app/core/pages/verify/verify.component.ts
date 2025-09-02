@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './verify.component.html',
-  styleUrl: './verify.component.css'
+  styleUrls: ['./verify.component.css']
 })
 export class VerifyComponent {
   verifyForm: FormGroup = new FormGroup({
@@ -30,7 +30,7 @@ export class VerifyComponent {
     private _AuthService: AuthService,
     private _Router: Router,
     private route: ActivatedRoute,
-     private toastr: ToastrService
+    private toastr: ToastrService
   ) {
     this.route.queryParams.subscribe(params => {
       this.email = params['email'];
@@ -53,7 +53,6 @@ export class VerifyComponent {
 
     this.isLoading = true;
 
-    // الباك إند مستني email و code small زي Postman
     const payload = {
       email: this.email.trim(),
       code: this.verifyForm.value.code.trim()
@@ -62,14 +61,14 @@ export class VerifyComponent {
     console.log("Verify payload:", payload);
 
     this._AuthService.verifyCode(payload).subscribe({
-      next: (response) => {
+      next: () => {
         this.isLoading = false;
         this.toastr.success('تم تأكيد الحساب بنجاح ✅');
         setTimeout(() => {
           this._Router.navigate(['/login']);
         }, 1500);
       },
-      error: (err) => {
+      error: () => {
         this.isLoading = false;
         this.toastr.error('فشل التحقق، حاول مرة أخرى.');
       }
@@ -87,13 +86,12 @@ export class VerifyComponent {
 
     this.resendLoading = true;
 
-    // هنا كمان نخليها email small
     this._AuthService.resendCode({ email: this.email.trim() }).subscribe({
-      next: (response) => {
+      next: () => {
         this.resendLoading = false;
         this.toastr.success('تم إرسال الكود مرة أخرى ✅');
       },
-      error: (err) => {
+      error: () => {
         this.resendLoading = false;
         this.toastr.error('فشل إرسال الكود، حاول مرة أخرى.');
       }

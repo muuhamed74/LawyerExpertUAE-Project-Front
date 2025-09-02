@@ -13,28 +13,28 @@ import { ContractItem } from '../interfaces/contracts-list-response';
 })
 export class ContractServiceService {
 
+  private apiUrl = Environment.baseUrl || '';
+
   constructor(private http: HttpClient) { }
 
-  // بعد التعديل
   getContracts(): Observable<ContractItem[]> {
-  return this.http.get<ContractItem[]>(`${Environment.baseUrl}/api/Contracts`);
-}
-
-  // 2) GET Contracts/product/{id}
-  getContractProduct(id: number | string): Observable<ContractProductResponse> {
-    return this.http.get<ContractProductResponse>(`${Environment.baseUrl}/api/Contracts/product/${id}`);
+    return this.http.get<ContractItem[]>(`${this.apiUrl}/api/Contracts`);
   }
 
-  // 3) POST ContactUsAPI/Template (رفع ملف)
+  getContractProduct(id: number | string): Observable<ContractProductResponse> {
+    return this.http.get<ContractProductResponse>(`${this.apiUrl}/api/Contracts/product/${id}`);
+  }
+
   uploadTemplate(file: File): Observable<UploadTemplateResponse> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<UploadTemplateResponse>(`${Environment.baseUrl}/api/Contracts/fill-template`, formData);
+    return this.http.post<UploadTemplateResponse>(`${this.apiUrl}/api/Contracts/fill-template`, formData);
   }
 
-  // 4) GET Contract/user-contracts (Bearer)
   getUserContracts(): Observable<UserContractsResponse[]> {
-    // التوكن بيتضاف تلقائيًا من الـ interceptor (لو مفعل)
-    return this.http.get<UserContractsResponse[]>(`${Environment.baseUrl}/api/Contracts/user-contracts`);
+    const token = localStorage.getItem('userToken') || '';
+    return this.http.get<UserContractsResponse[]>(`${this.apiUrl}/api/Contracts/user-contracts`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
   }
 }

@@ -1,28 +1,27 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, HostListener } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import EmblaCarousel from 'embla-carousel';
 import emailjs from 'emailjs-com';
 import { ToastrService } from 'ngx-toastr';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [NgFor, RouterLink, NgIf, FormsModule],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
+  styleUrls: ['./home.component.css'], // صححت typo
 })
 export class HomeComponent implements AfterViewInit, OnDestroy {
-
-  constructor(private toastr: ToastrService) {}
-
 
   @ViewChild('embla') emblaRef!: ElementRef;
   embla: any;
   selectedIndex = 0;
   autoplayInterval: any;
   showButton = false;
+  isBrowser: boolean;
 
   formData = {
     name: '',
@@ -30,6 +29,20 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     phone: '',
     message: ''
   };
+
+  resumes = [
+    { image: 'assets/images/اتفاقية-وساطة-تجارية.webp' },
+    { image: 'assets/images/اتفاقية-الغاء-رخصة-تجارية.docx.webp' },
+    { image: 'assets/images/عقد-بيع-حصص-وفسخ-شراكة.webp' },
+    { image: 'assets/images/عقد-تأسيس-شركة-اعمال-مدنية.webp' },
+    { image: 'assets/images/عقـــد-بيع-محل-تجارى.webp' },
+    { image: 'assets/images/عقد-تعيين-وكيل-خدمات-محلي.webp' },
+    { image: 'assets/images/عقد-بيع حصص-وملحق-بتعديل-عقد-تأسيس.webp' },
+  ];
+
+  constructor(private toastr: ToastrService, @Inject(PLATFORM_ID) private platformId: Object) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   isFormValid(): boolean {
     return this.formData.name.trim() !== '' &&
@@ -47,40 +60,33 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     }
 
     emailjs.send(
-      'service_j5k3889',   // حط الـ Service ID من EmailJS
-      'template_h2r7kho',  // حط الـ Template ID من EmailJS
+      'service_j5k3889',
+      'template_h2r7kho',
       this.formData,
-      '57pj8qlkDabVqp8kH'    // حط الـ Public Key من EmailJS
+      '57pj8qlkDabVqp8kH'
     ).then(() => {
       this.toastr.success('تم إرسال رسالتك بنجاح ✅');
-      this.formData = { name: '', email: '', phone: '', message: '' }; // مسح البيانات بعد الإرسال
-    }).catch((error) => {
+      this.formData = { name: '', email: '', phone: '', message: '' };
+    }).catch(() => {
       this.toastr.error('حصل خطأ ما ❌');
     });
   }
 
-
   @HostListener('window:scroll', [])
   onWindowScroll() {
+    if (!this.isBrowser) return;
     const scrollY = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
     this.showButton = scrollY > 300;
   }
 
   scrollToTop() {
+    if (!this.isBrowser) return;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  resumes = [
-    { image: 'assets/images/اتفاقية-وساطة-تجارية.webp' },
-    { image: 'assets/images/اتفاقية-الغاء-رخصة-تجارية.docx.webp' },
-    { image: 'assets/images/عقد-بيع-حصص-وفسخ-شراكة.webp' },
-    { image: 'assets/images/عقد-تأسيس-شركة-اعمال-مدنية.webp' },
-    { image: 'assets/images/عقـــد-بيع-محل-تجارى.webp' },
-    { image: 'assets/images/عقد-تعيين-وكيل-خدمات-محلي.webp' },
-    { image: 'assets/images/عقد-بيع حصص-وملحق-بتعديل-عقد-تأسيس.webp' },
-  ];
-
   ngAfterViewInit() {
+    if (!this.isBrowser) return;
+
     this.embla = EmblaCarousel(this.emblaRef.nativeElement, {
       direction: 'rtl',
       loop: true,
@@ -88,7 +94,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     const updateSelected = () => {
       this.selectedIndex = this.embla.selectedScrollSnap();
-
       const slides = this.embla.slideNodes();
       slides.forEach((slide: HTMLElement, index: number) => {
         slide.classList.toggle('is-selected', index === this.selectedIndex);
@@ -113,14 +118,17 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   scrollPrev() {
+    if (!this.isBrowser) return;
     this.embla.scrollPrev();
   }
 
   scrollNext() {
+    if (!this.isBrowser) return;
     this.embla.scrollNext();
   }
 
   scrollTo(index: number) {
+    if (!this.isBrowser) return;
     this.embla.scrollTo(index);
   }
 }
