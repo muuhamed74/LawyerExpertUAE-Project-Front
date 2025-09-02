@@ -38,13 +38,11 @@
             "scripts": [
               "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ],
-<<<<<<< HEAD
             "server": "src/main.server.ts",
             "prerender": true,
             "ssr": {
               "entry": "server.ts"
             }
-=======
             "allowedCommonJsDependencies": [
               "canvg",
               "html2canvas",
@@ -55,7 +53,6 @@
               "raf",
               "rgbcolor"
             ]
->>>>>>> upstream/master
           },
           "configurations": {
             "production": {
