@@ -18,13 +18,10 @@
     "@angular/forms": "^17.3.0",
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",
-<<<<<<< HEAD
     "@angular/platform-server": "^17.3.0",
     "@angular/router": "^17.3.0",
     "@angular/ssr": "^17.3.11",
-=======
     "@angular/router": "^17.3.0",
->>>>>>> upstream/master
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@kolkov/angular-editor": "^3.0.0-beta.2",
     "bootstrap": "^5.3.7",
