@@ -1,31 +1,38 @@
-<<<<<<< HEAD
-# Samy_Mahrous_Legal_Consaltans
-=======
-# SamyMahrousLegalConsaltans
+# LawyerExpertUAE-Project-Front
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.11.
+This project is the **frontend implementation** of the Lawyer Expert UAE platform. It was developed with **Angular** and **TypeScript**, focusing on creating a modern, intuitive, and responsive user interface.
 
-## Development server
+🔗 **Live Project:** [Law Experts UAE](https://lawexpertsuae.com/home)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+---
 
-## Code scaffolding
+## ✨ Features
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+The platform provides users with several key functionalities:
 
-## Build
+* **User Authentication**: Secure login system for clients to access the platform.
+* **Contracts Management**: Users can access, view, and edit legal contracts through the web interface.
+* **Legal Articles**: A section to read the latest articles and updates in the field of law.
+* **Consultation Requests**: Clients can submit legal consultation requests directly to lawyers through the website.
+* **Responsive UI/UX**: Designed and implemented a user-friendly interface that works seamlessly across devices.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+---
 
-## Running unit tests
+## 🛠️ Technologies Used
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+* **Angular** – frontend framework
+* **TypeScript** – programming language
+* **HTML5 & CSS3** – structure and styling
+* **Responsive Design Principles** – for mobile and desktop compatibility
 
-## Running end-to-end tests
+---
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## 👨‍💻 My Role
 
-## Further help
+I was responsible for:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
->>>>>>> upstream/master
+* Designing and implementing the **UI/UX**.
+* Developing the **frontend logic** using Angular and TypeScript.
+* Building reusable and responsive components.
+* Ensuring smooth integration with the backend API.
+
